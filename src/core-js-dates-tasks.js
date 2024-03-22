@@ -149,8 +149,9 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const d = new Date(date);
+  return d.toLocaleString('en-US', { timeZone: 'UTC' });
 }
 
 /**
@@ -165,8 +166,18 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const startMonthIndex = month - 1 < 0 ? 11 : month - 1;
+  let startDate = new Date(year, startMonthIndex, 1, 0, 0, 0);
+  const endDate = new Date(year, month, 1, 0, 0, 0);
+  let weekends = 0;
+  while (startDate < endDate) {
+    if (startDate.getDay() === 0 || startDate.getDay() === 6) {
+      weekends += 1;
+    }
+    startDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+  }
+  return weekends;
 }
 
 /**
@@ -182,8 +193,28 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  let week = 0;
+  const startDate = new Date(date.getFullYear(), 0, 1);
+  if (startDate.getUTCDay() !== 0) {
+    week += 1;
+    startDate.setTime(
+      startDate.getTime() + (7 - startDate.getUTCDay()) * 24 * 60 * 60 * 1000
+    );
+  }
+  if (date.getUTCDay() !== 6) {
+    week += 1;
+    date.setTime(
+      date.getTime() - (7 - startDate.getUTCDay() - 1) * 24 * 60 * 60 * 1000
+    );
+  }
+  if (startDate > date) {
+    return 1;
+  }
+  week += Math.ceil(
+    (date.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000) / 7
+  );
+  return week;
 }
 
 /**
@@ -197,8 +228,29 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  const nextMonth = () => {
+    if (date.getMonth() === 11) {
+      const currentYear = date.getFullYear();
+      date.setFullYear(currentYear + 1);
+    }
+    const currentMonth = date.getMonth();
+    date.setMonth((currentMonth + 1) % 12);
+  };
+
+  if (date.getDate() < 13) {
+    date.setDate(13);
+  } else if (date.getDate() >= 13) {
+    date.setDate(13);
+    nextMonth();
+  }
+
+  let day = date.getDay();
+  while (day !== 5) {
+    nextMonth();
+    day = date.getDay();
+  }
+  return date;
 }
 
 /**
