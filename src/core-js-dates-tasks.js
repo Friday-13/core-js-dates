@@ -193,28 +193,28 @@ function getCountWeekendsInMonth(month, year) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(date) {
-  let week = 0;
-  const startDate = new Date(date.getFullYear(), 0, 1);
-  if (startDate.getUTCDay() !== 0) {
-    week += 1;
-    startDate.setTime(
-      startDate.getTime() + (7 - startDate.getUTCDay()) * 24 * 60 * 60 * 1000
-    );
-  }
-  if (date.getUTCDay() !== 6) {
-    week += 1;
-    date.setTime(
-      date.getTime() - (7 - startDate.getUTCDay() - 1) * 24 * 60 * 60 * 1000
-    );
-  }
-  if (startDate > date) {
-    return 1;
-  }
-  week += Math.ceil(
-    (date.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000) / 7
-  );
-  return week;
+function getWeekNumberByDate(/* date */) {
+  // let week = 0;
+  // const startDate = new Date(date.getFullYear(), 0, 1);
+  // if (startDate.getUTCDay() !== 0) {
+  //   week += 1;
+  //   startDate.setTime(
+  //     startDate.getTime() + (7 - startDate.getUTCDay()) * 24 * 60 * 60 * 1000
+  //   );
+  // }
+  // if (date.getUTCDay() !== 6) {
+  //   week += 1;
+  //   date.setTime(
+  //     date.getTime() - (7 - startDate.getUTCDay() - 1) * 24 * 60 * 60 * 1000
+  //   );
+  // }
+  // if (startDate > date) {
+  //   return 1;
+  // }
+  // week += Math.ceil(
+  //   (date.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000) / 7
+  // );
+  return 0;
 }
 
 /**
